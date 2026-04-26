@@ -178,7 +178,9 @@ class TushareFetcher(BaseFetcher):
         The project already normalizes all Pro calls through the same request
         contract, so we do not need the official tushare SDK during runtime.
         """
-        client = _TushareHttpClient(token=token)
+        config = get_config()
+        api_url = config.tushare_api_url
+        client = _TushareHttpClient(token=token, api_url=api_url) if api_url else _TushareHttpClient(token=token)
         logger.debug("Tushare API client configured for direct HTTP calls")
         return client
 
