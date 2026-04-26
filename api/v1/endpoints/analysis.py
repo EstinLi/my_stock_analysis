@@ -71,6 +71,12 @@ router = APIRouter()
 _SUPPORTED_FREE_TEXT_RE = re.compile(r"^[A-Za-z0-9.*\-+\u3400-\u9fff\s]+$")
 
 
+def _as_text(value: Any) -> Optional[str]:
+    if value is None:
+        return None
+    return str(value)
+
+
 def _invalid_analysis_input_error() -> HTTPException:
     return HTTPException(
         status_code=400,
@@ -783,10 +789,10 @@ def _build_analysis_report(
     strategy = None
     if strategy_data:
         strategy = ReportStrategy(
-            ideal_buy=strategy_data.get("ideal_buy"),
-            secondary_buy=strategy_data.get("secondary_buy"),
-            stop_loss=strategy_data.get("stop_loss"),
-            take_profit=strategy_data.get("take_profit")
+            ideal_buy=_as_text(strategy_data.get("ideal_buy")),
+            secondary_buy=_as_text(strategy_data.get("secondary_buy")),
+            stop_loss=_as_text(strategy_data.get("stop_loss")),
+            take_profit=_as_text(strategy_data.get("take_profit"))
         )
 
     extracted_fundamental = extract_fundamental_detail_fields(
